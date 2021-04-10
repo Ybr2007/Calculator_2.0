@@ -1,12 +1,15 @@
+/*------------------------------
+|   Project Name:Calculator 2.0;|
+|   By:Ybr and qiaoqiao;        |
+-----------------------------*/
 #include <Keypad.h>
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
 long x,time,timex,a,b,c;
-int meau;
+int menu;/*定义变量*/
 
-LiquidCrystal_I2C lcd(0x27,16,2); 
-
+LiquidCrystal_I2C lcd(0x27,16,2);/*定义LCD地址*/ 
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //three columns
 char keys[ROWS][COLS] = 
@@ -17,9 +20,9 @@ char keys[ROWS][COLS] =
   {'C','0','=','/'}
 };
 byte rowPins[ROWS] = {9,8,7,6}; 
-byte colPins[COLS] = {5,4,3,2}; 
+byte colPins[COLS] = {5,4,3,2}; /*初始化4*4小键盘*/
  
-Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );/*定义4*4小键盘*/
 void cleanxy(int x,int y)
 {
   for(int i=0;i<x;i++)
@@ -237,7 +240,7 @@ void compute2(char key)
 }
 void home()
 {
-  meau=0;
+  menu=0;
   clean();
   lcd.setCursor(0,0);
   lcd.print("menu");
@@ -490,59 +493,59 @@ void loop()
 {
     char key = keypad.getKey();
     int sV=digitalRead(12);
-    if(key=='1'&&meau==0)
+    if(key=='1'&&menu==0)
     {
-      meau=1;
+      menu=1;
       clean();
       delay(1000);
     }
-    if(key=='2'&&meau==0)
+    if(key=='2'&&menu==0)
     {
-      meau=2;
+      menu=2;
       clean();
       delay(1000);
     }
-    if(key=='3'&&meau==0)
+    if(key=='3'&&menu==0)
     {
-      meau=3;
+      menu=3;
       clean();
       delay(1000);
       time=0;timex=0;
     }
-    if(key=='4'&&meau==0)
+    if(key=='4'&&menu==0)
     {
-      meau=4;
+      menu=4;
       clean();
       delay(1000);
       time=0;
     }
-    if(key=='5'&&meau==0)
+    if(key=='5'&&menu==0)
     {
-      meau=5;
+      menu=5;
       clean();
       delay(1000);
     }
-    if(key=='6'&&meau==0)
+    if(key=='6'&&menu==0)
     {
-      meau=6;
+      menu=6;
       clean();
       delay(1000);
     }
-    if(key=='7'&&meau==0)
+    if(key=='7'&&menu==0)
     {
-      meau=7;
+      menu=7;
       clean();
       delay(1000);
     }
-    if(meau==1)
+    if(menu==1)
     {
       compute(key);
     }
-    if(meau==2)
+    if(menu==2)
     {
       compute2(key);
     }
-    if(meau==3)
+    if(menu==3)
     {
       reckon();
       if(key=='C')
@@ -551,7 +554,7 @@ void loop()
         else timex=0;
       }
     }
-    if(meau==4)
+    if(menu==4)
     {
       if(key>='0'&&key<='9')
       {
@@ -566,10 +569,20 @@ void loop()
         while(time>0)
         {
           timing();
+          key = keypad.getKey();
           if(time==0)
           {
             lcd.setCursor(0,0);
             lcd.print("end");
+          }
+          if(key=='C')
+          {
+            clean();
+            lcd.setCursor(0,0);
+            lcd.print("clean");
+            delay(1000);
+            clean();
+            break;
           }
         }
       }
@@ -577,22 +590,27 @@ void loop()
       {
         time=0;
         clean();
+        lcd.setCursor(0,0);
+        lcd.print("clean");
+        delay(1000);
+        clean();
       }
     }
-    if(meau==5)
+    if(menu==5)
     {
       equation1(key);
     }
-    if(meau==6)
+    if(menu==6)
     {
       equation2(key);
     }
-    if(meau==7)
+    if(menu==7)
     {
       Quality(key);
     }
     if(sV==LOW)
     {
+      Serial.println("home");
       home();
     }
 }
